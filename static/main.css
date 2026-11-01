@@ -1,0 +1,39 @@
+/* Couleurs réutilisées dans toute la page */
+:root {
+    --fond: #0f172a;
+    --bordure: #334155;
+    --texte: #e2e8f0;
+    --texte-discret: #94a3b8;
+    --accent: #2dd4bf;
+}
+
+/* Page centrée avec une largeur limitée */
+body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 16px;
+    background-color: var(--fond);
+    color: var(--texte);
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+}
+
+h1 {
+    color: var(--accent);
+}
+
+/* La ligne au-dessus de chaque titre sépare les avis */
+h2 {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--bordure);
+    font-size: 1.15rem;
+}
+
+p {
+    color: var(--texte-discret);
+}
+
+a {
+    color: var(--accent);
+}

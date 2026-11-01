@@ -8,5 +8,10 @@
 <body>
     <h1>Outil Veille Cyber</h1>
     <p>Test!</p>
+    {% for avis in avis %}
+        <h2>{{ avis.title }}</h2>
+        <a href="https://cert.cyber.gouv.fr/avis/{{ avis.reference }}">Accéder à l'avis</a><br>
+        <p>Date de révision : {{ avis.last_revision_date }}</p>
+    {% endfor %}
 </body>
 </html>
