@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outil Veille Cyber</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
+
 <body>
     <h1>Outil Veille Cyber</h1>
     <p>Test!</p>
+    <input type="text" id="searchInput" placeholder="Rechercher..." />
     {% for avis in avis %}
+    <div class="avis">
         <h2>{{ avis.title }}</h2>
         <a href="https://cert.cyber.gouv.fr/avis/{{ avis.reference }}">Accéder à l'avis</a><br>
         <p>Date de révision : {{ avis.last_revision_date }}</p>
-    {% endfor %}
+    </div> 
+    {% endfor %} 
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const avisElements = document.querySelectorAll('h2');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = searchInput.value.toLowerCase();
+            avisElements.forEach((avis) => {
+                const avisContainer = avis.parentElement;
+                const title = avis.textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    avisContainer.style.display = '';
+                } else {
+                    avisContainer.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

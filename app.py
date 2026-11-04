@@ -7,7 +7,7 @@ url = "https://cert.cyber.gouv.fr/avis/json/"
 
 api = requests.get(url)
 
-cert_avis = api.json()[-5:] ## récupère les 5 derniers avis du CERT-FR
+cert_avis = api.json()[-50:] ## récupère les 50 derniers avis du CERT-FR
 
 @app.route("/")
 def render_main_page():
