@@ -7,6 +7,9 @@
     --texte-discret: #94a3b8;
     --accent: #2dd4bf;
     --accent-fonce: #14b8a6;
+    --alerte: #f87171;
+    --alerte-fonce: #ef4444;
+    --fond-alerte: #2a1e2b;
     --rayon: 10px;
 }
 
@@ -60,52 +63,89 @@ p {
     box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
 }
 
-/* Chaque avis est affiché comme une carte */
+/* Chaque avis / alerte est affiché comme une carte.
+   --couleur-carte change selon le type (turquoise pour avis, rouge pour alerte) */
 .avis {
+    --couleur-carte: var(--accent);
+    --couleur-carte-fonce: var(--accent-fonce);
+}
+
+.alerte {
+    --couleur-carte: var(--alerte);
+    --couleur-carte-fonce: var(--alerte-fonce);
+}
+
+.avis,
+.alerte {
     margin-top: 16px;
     padding: 20px 24px;
     background-color: var(--fond-carte);
     border: 1px solid var(--bordure);
-    border-left: 4px solid var(--accent);
+    border-left: 4px solid var(--couleur-carte);
     border-radius: var(--rayon);
     transition: transform 0.2s, border-color 0.2s;
 }
 
-.avis:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
+.alerte {
+    background-color: var(--fond-alerte);
 }
 
-.avis h2 {
+.avis:hover,
+.alerte:hover {
+    transform: translateY(-2px);
+    border-color: var(--couleur-carte);
+}
+
+.avis h2,
+.alerte h2 {
     margin: 0 0 12px;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--texte);
 }
 
-.avis p {
+/* Petit badge "ALERTE" devant le titre */
+.alerte h2::before {
+    content: "⚠ ALERTE";
+    display: inline-block;
+    margin-right: 10px;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+    color: var(--fond);
+    background-color: var(--couleur-carte);
+    border-radius: 4px;
+}
+
+.avis p,
+.alerte p {
     margin-top: 8px;
     font-size: 0.9rem;
 }
 
 /* Lien en forme de petit bouton */
-.avis a {
+.avis a,
+.alerte a {
     display: inline-block;
     padding: 6px 12px;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--fond);
-    background-color: var(--accent);
+    background-color: var(--couleur-carte);
     border-radius: 6px;
     text-decoration: none;
     transition: background-color 0.2s;
 }
 
-.avis a:hover {
-    background-color: var(--accent-fonce);
+.avis a:hover,
+.alerte a:hover {
+    background-color: var(--couleur-carte-fonce);
 }
 
-.avis br {
+.avis br,
+.alerte br {
     display: none;
 }
 

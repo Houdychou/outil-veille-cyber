@@ -19,19 +19,26 @@
         <p>Date de révision : {{ avis.last_revision_date }}</p>
     </div> 
     {% endfor %} 
+    {% for alert in alertes %}
+    <div class="alerte">
+        <h2>{{ alert.title }}</h2>
+        <a href="https://cert.cyber.gouv.fr/alerte/{{ alert.reference }}">Accéder à l'alerte</a><br>
+        <p>Date de révision : {{ alert.last_revision_date }}</p>
+    </div> 
+    {% endfor %} 
     <script>
         const searchInput = document.getElementById('searchInput');
-        const avisElements = document.querySelectorAll('h2');
+        const h2Elements = document.querySelectorAll('h2');
 
         searchInput.addEventListener('input', function () {
             const searchTerm = searchInput.value.toLowerCase();
-            avisElements.forEach((avis) => {
-                const avisContainer = avis.parentElement;
-                const title = avis.textContent.toLowerCase();
+            h2Elements.forEach((h2) => {
+                const h2Container = h2.parentElement;
+                const title = h2.textContent.toLowerCase();
                 if (title.includes(searchTerm)) {
-                    avisContainer.style.display = '';
+                    h2Container.style.display = '';
                 } else {
-                    avisContainer.style.display = 'none';
+                    h2Container.style.display = 'none';
                 }
             });
         });
