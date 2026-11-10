@@ -22,4 +22,4 @@ Demande : changer tout le style de la page
 Gardé   : Tout a été gardé
 Corrigé : Rien n'a été corrigé
 Rejeté  : Rien n'a été rejeté
-Commit  : à compléter
+Commit  : 95d4c5c refonte totale du style, ajout d'un filtre pour différencier avis/alertes
