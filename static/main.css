@@ -1,147 +1,303 @@
-/* Couleurs réutilisées dans toute la page */
+/* =========================================================
+   Outil Veille Cyber — style "bulletin de sécurité"
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap");
+
+/* Couleurs du thème clair */
 :root {
-    --fond: #0f172a;
-    --fond-carte: #1e293b;
-    --bordure: #334155;
-    --texte: #e2e8f0;
-    --texte-discret: #94a3b8;
-    --accent: #2dd4bf;
-    --accent-fonce: #14b8a6;
-    --alerte: #f87171;
-    --alerte-fonce: #ef4444;
-    --fond-alerte: #2a1e2b;
-    --rayon: 10px;
+    --fond: #f4f3ef;
+    --fond-carte: #ffffff;
+    --encre: #16181d;
+    --encre-discrete: #6b6f78;
+    --trait: #e2e0d9;
+    --avis: #2f5bea;
+    --avis-doux: #e8edfd;
+    --alerte: #d93a2b;
+    --alerte-doux: #fcebe9;
+    --ombre: 0 1px 2px rgba(22, 24, 29, 0.04), 0 4px 16px rgba(22, 24, 29, 0.06);
+    --ombre-survol: 0 2px 4px rgba(22, 24, 29, 0.06), 0 12px 32px rgba(22, 24, 29, 0.10);
+    --rayon: 14px;
+    --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+
+/* Thème sombre automatique si l'ordinateur est en mode sombre */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --fond: #0e1014;
+        --fond-carte: #171a20;
+        --encre: #eceef2;
+        --encre-discrete: #8d929c;
+        --trait: #262a33;
+        --avis: #7b9cff;
+        --avis-doux: #1c2440;
+        --alerte: #ff6b5c;
+        --alerte-doux: #3a1d1b;
+        --ombre: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --ombre-survol: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
 }
 
 * {
     box-sizing: border-box;
 }
 
-/* Page centrée avec une largeur limitée */
-body {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 40px 16px;
+html {
     background-color: var(--fond);
-    color: var(--texte);
-    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
 }
+
+/* La page est une grille : l'en-tête prend toute la largeur,
+   les avis et alertes se rangent sur 2 colonnes */
+body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+    background-color: var(--fond);
+    color: var(--encre);
+    font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+body > p,
+#searchInput,
+.filters {
+    grid-column: 1 / -1;
+}
+
+/* ---------- En-tête ---------- */
 
 h1 {
-    margin: 0 0 8px;
-    font-size: 2rem;
-    color: var(--accent);
-    letter-spacing: -0.02em;
-}
-
-p {
     margin: 0;
-    color: var(--texte-discret);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
 }
 
-/* Barre de recherche */
+/* Petite étiquette "VEILLE · CERT-FR" au-dessus du titre */
+h1::before {
+    content: "● VEILLE · CERT-FR";
+    display: block;
+    margin-bottom: 12px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--alerte);
+}
+
+body > p {
+    margin: -8px 0 16px;
+    color: var(--encre-discrete);
+}
+
+/* ---------- Recherche ---------- */
+
 #searchInput {
     width: 100%;
-    margin: 24px 0 8px;
-    padding: 12px 16px;
+    padding: 16px 20px 16px 48px;
     font: inherit;
-    color: var(--texte);
+    font-size: 1rem;
+    color: var(--encre);
     background-color: var(--fond-carte);
-    border: 1px solid var(--bordure);
+    /* Icône loupe dessinée en SVG */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238d929c' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 18px center;
+    border: 1px solid var(--trait);
     border-radius: var(--rayon);
+    box-shadow: var(--ombre);
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 #searchInput::placeholder {
-    color: var(--texte-discret);
+    color: var(--encre-discrete);
 }
 
 #searchInput:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
+    border-color: var(--encre);
+    box-shadow: 0 0 0 4px rgba(127, 127, 127, 0.15);
 }
 
-/* Chaque avis / alerte est affiché comme une carte.
-   --couleur-carte change selon le type (turquoise pour avis, rouge pour alerte) */
+/* ---------- Filtres ---------- */
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.filters button {
+    padding: 8px 18px;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--encre);
+    background-color: transparent;
+    border: 1px solid var(--trait);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.filters button:hover {
+    border-color: var(--encre);
+}
+
+.filters button:focus {
+    outline: none;
+    color: var(--fond);
+    background-color: var(--encre);
+    border-color: var(--encre);
+}
+
+.filters button[data-filter="avis"]:focus {
+    background-color: var(--avis);
+    border-color: var(--avis);
+    color: #fff;
+}
+
+.filters button[data-filter="alerte"]:focus {
+    background-color: var(--alerte);
+    border-color: var(--alerte);
+    color: #fff;
+}
+
+/* ---------- Cartes avis / alertes ---------- */
+
 .avis {
-    --couleur-carte: var(--accent);
-    --couleur-carte-fonce: var(--accent-fonce);
+    --couleur: var(--avis);
+    --couleur-douce: var(--avis-doux);
+    --etiquette: "AVIS";
 }
 
 .alerte {
-    --couleur-carte: var(--alerte);
-    --couleur-carte-fonce: var(--alerte-fonce);
+    --couleur: var(--alerte);
+    --couleur-douce: var(--alerte-doux);
+    --etiquette: "⚠ ALERTE";
 }
 
 .avis,
 .alerte {
-    margin-top: 16px;
-    padding: 20px 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
     background-color: var(--fond-carte);
-    border: 1px solid var(--bordure);
-    border-left: 4px solid var(--couleur-carte);
+    border: 1px solid var(--trait);
     border-radius: var(--rayon);
-    transition: transform 0.2s, border-color 0.2s;
+    box-shadow: var(--ombre);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
-.alerte {
-    background-color: var(--fond-alerte);
+/* Bande de couleur en haut de la carte */
+.avis::before,
+.alerte::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background-color: var(--couleur);
 }
 
 .avis:hover,
 .alerte:hover {
-    transform: translateY(-2px);
-    border-color: var(--couleur-carte);
+    transform: translateY(-3px);
+    box-shadow: var(--ombre-survol);
+    border-color: var(--couleur);
+}
+
+/* Les alertes sont plus visibles : fond légèrement teinté */
+.alerte {
+    background-image: linear-gradient(160deg, var(--couleur-douce), var(--fond-carte) 60%);
+}
+
+/* Badge "AVIS" / "ALERTE" au-dessus du titre */
+.avis h2::before,
+.alerte h2::before {
+    content: var(--etiquette);
+    display: table;
+    margin-bottom: 12px;
+    padding: 3px 10px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--couleur);
+    background-color: var(--couleur-douce);
+    border-radius: 6px;
 }
 
 .avis h2,
 .alerte h2 {
-    margin: 0 0 12px;
-    font-size: 1.1rem;
+    order: 1;
+    margin: 0 0 16px;
+    font-size: 1.05rem;
     font-weight: 600;
-    color: var(--texte);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
 }
 
-/* Petit badge "ALERTE" devant le titre */
-.alerte h2::before {
-    content: "⚠ ALERTE";
-    display: inline-block;
-    margin-right: 10px;
-    padding: 2px 8px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    vertical-align: middle;
-    color: var(--fond);
-    background-color: var(--couleur-carte);
-    border-radius: 4px;
-}
-
+/* Date en police "terminal" */
 .avis p,
 .alerte p {
-    margin-top: 8px;
-    font-size: 0.9rem;
+    order: 2;
+    margin: 0 0 20px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--encre-discrete);
 }
 
-/* Lien en forme de petit bouton */
+/* Lien placé en bas de la carte, avec une flèche */
 .avis a,
 .alerte a {
-    display: inline-block;
-    padding: 6px 12px;
+    order: 3;
+    margin-top: auto;
+    padding-top: 16px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--fond);
-    background-color: var(--couleur-carte);
-    border-radius: 6px;
+    color: var(--couleur);
     text-decoration: none;
-    transition: background-color 0.2s;
+    border-top: 1px solid var(--trait);
 }
 
-.avis a:hover,
-.alerte a:hover {
-    background-color: var(--couleur-carte-fonce);
+.avis a::after,
+.alerte a::after {
+    content: " →";
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.avis a:hover::after,
+.alerte a:hover::after {
+    transform: translateX(4px);
+}
+
+/* Toute la carte devient cliquable grâce au lien */
+.avis a::before,
+.alerte a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.avis a:focus-visible,
+.alerte a:focus-visible {
+    outline: none;
+}
+
+.avis:focus-within,
+.alerte:focus-within {
+    outline: 2px solid var(--couleur);
+    outline-offset: 2px;
 }
 
 .avis br,
@@ -149,6 +305,16 @@ p {
     display: none;
 }
 
-a {
-    color: var(--accent);
+/* ---------- Téléphone : une seule colonne ---------- */
+
+@media (max-width: 700px) {
+    body {
+        grid-template-columns: 1fr;
+        padding: 32px 16px 48px;
+    }
+
+    .avis,
+    .alerte {
+        padding: 20px;
+    }
 }

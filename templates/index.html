@@ -12,23 +12,43 @@
     <h1>Outil Veille Cyber</h1>
     <p>Test!</p>
     <input type="text" id="searchInput" placeholder="Rechercher..." />
+    <div class="filters">
+        <button data-filter="all">Tous</button>
+        <button data-filter="avis">Avis</button>
+        <button data-filter="alerte">Alertes</button>
+    </div>
     {% for avis in avis %}
     <div class="avis">
         <h2>{{ avis.title }}</h2>
         <a href="https://cert.cyber.gouv.fr/avis/{{ avis.reference }}">Accéder à l'avis</a><br>
         <p>Date de révision : {{ avis.last_revision_date }}</p>
-    </div> 
-    {% endfor %} 
+    </div>
+    {% endfor %}
     {% for alert in alertes %}
     <div class="alerte">
         <h2>{{ alert.title }}</h2>
         <a href="https://cert.cyber.gouv.fr/alerte/{{ alert.reference }}">Accéder à l'alerte</a><br>
         <p>Date de révision : {{ alert.last_revision_date }}</p>
-    </div> 
-    {% endfor %} 
+    </div>
+    {% endfor %}
     <script>
         const searchInput = document.getElementById('searchInput');
         const h2Elements = document.querySelectorAll('h2');
+        const filterButtons = document.querySelectorAll('.filters button');
+
+        filterButtons.forEach((button) => {
+            button.addEventListener('click', function () {
+                const filter = button.getAttribute('data-filter');
+                h2Elements.forEach((h2) => {
+                    const h2Container = h2.parentElement;
+                    if (filter === 'all' || h2Container.classList.contains(filter)) {
+                        h2Container.style.display = '';
+                    } else {
+                        h2Container.style.display = 'none';
+                    }
+                });
+            });
+        });
 
         searchInput.addEventListener('input', function () {
             const searchTerm = searchInput.value.toLowerCase();
