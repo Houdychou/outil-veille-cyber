@@ -65,8 +65,18 @@ body {
 h1,
 body > p,
 #searchInput,
-.filters {
+.filters,
+.outils,
+#liste,
+#aucunResultat {
     grid-column: 1 / -1;
+}
+
+/* La liste des cartes reprend la grille sur 2 colonnes */
+#liste {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
 }
 
 /* ---------- En-tête ---------- */
@@ -151,23 +161,64 @@ body > p {
     border-color: var(--encre);
 }
 
-.filters button:focus {
-    outline: none;
+/* Bouton du filtre actif (classe ajoutée par le JavaScript) */
+.filters button.actif {
     color: var(--fond);
     background-color: var(--encre);
     border-color: var(--encre);
 }
 
-.filters button[data-filter="avis"]:focus {
+.filters button.actif[data-filter="avis"] {
     background-color: var(--avis);
     border-color: var(--avis);
     color: #fff;
 }
 
-.filters button[data-filter="alerte"]:focus {
+.filters button.actif[data-filter="alerte"] {
     background-color: var(--alerte);
     border-color: var(--alerte);
     color: #fff;
+}
+
+/* ---------- Tri, réinitialisation, compteur ---------- */
+
+.outils {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+}
+
+.outils select,
+.outils button {
+    padding: 8px 14px;
+    font: inherit;
+    color: var(--encre);
+    background-color: var(--fond-carte);
+    border: 1px solid var(--trait);
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.outils button:hover,
+.outils select:hover {
+    border-color: var(--encre);
+}
+
+#compteur {
+    margin-left: auto;
+    font-family: var(--mono);
+    color: var(--encre-discrete);
+}
+
+#aucunResultat {
+    padding: 40px;
+    text-align: center;
+    color: var(--encre-discrete);
+    border: 1px dashed var(--trait);
+    border-radius: var(--rayon);
 }
 
 /* ---------- Cartes avis / alertes ---------- */
@@ -305,12 +356,24 @@ body > p {
     display: none;
 }
 
+/* Référence CERT-FR, juste au-dessus de la date */
+.avis p.reference,
+.alerte p.reference {
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--couleur);
+}
+
 /* ---------- Téléphone : une seule colonne ---------- */
 
 @media (max-width: 700px) {
     body {
         grid-template-columns: 1fr;
         padding: 32px 16px 48px;
+    }
+
+    #liste {
+        grid-template-columns: 1fr;
     }
 
     .avis,

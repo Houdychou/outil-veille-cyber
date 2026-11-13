@@ -13,55 +13,122 @@
     <p>Test!</p>
     <input type="text" id="searchInput" placeholder="Rechercher..." />
     <div class="filters">
-        <button data-filter="all">Tous</button>
+        <button data-filter="all" class="actif">Tous</button>
         <button data-filter="avis">Avis</button>
         <button data-filter="alerte">Alertes</button>
     </div>
-    {% for avis in avis %}
-    <div class="avis">
-        <h2>{{ avis.title }}</h2>
-        <a href="https://cert.cyber.gouv.fr/avis/{{ avis.reference }}">Accéder à l'avis</a><br>
-        <p>Date de révision : {{ avis.last_revision_date }}</p>
+    <div class="outils">
+        <label for="tri">Trier :</label>
+        <select id="tri">
+            <option value="recent">Plus récent d'abord</option>
+            <option value="ancien">Plus ancien d'abord</option>
+        </select>
+        <button id="reset">Réinitialiser</button>
+        <span id="compteur"></span>
     </div>
-    {% endfor %}
-    {% for alert in alertes %}
-    <div class="alerte">
-        <h2>{{ alert.title }}</h2>
-        <a href="https://cert.cyber.gouv.fr/alerte/{{ alert.reference }}">Accéder à l'alerte</a><br>
-        <p>Date de révision : {{ alert.last_revision_date }}</p>
+
+    <div id="liste">
+        {% for avis in avis %}
+        <div class="avis" data-date="{{ avis.last_revision_date }}">
+            <h2>{{ avis.title }}</h2>
+            <a href="https://cert.cyber.gouv.fr/avis/{{ avis.reference }}">Accéder à l'avis</a><br>
+            <p class="reference">{{ avis.reference }}</p>
+            <p>Date de révision : {{ avis.last_revision_date }}</p>
+        </div>
+        {% endfor %}
+        {% for alert in alertes %}
+        <div class="alerte" data-date="{{ alert.last_revision_date }}">
+            <h2>{{ alert.title }}</h2>
+            <a href="https://cert.cyber.gouv.fr/alerte/{{ alert.reference }}">Accéder à l'alerte</a><br>
+            <p class="reference">{{ alert.reference }}</p>
+            <p>Date de révision : {{ alert.last_revision_date }}</p>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    <div id="aucunResultat" hidden>Aucun résultat trouvé</div>
+
     <script>
         const searchInput = document.getElementById('searchInput');
-        const h2Elements = document.querySelectorAll('h2');
         const filterButtons = document.querySelectorAll('.filters button');
+        const triSelect = document.getElementById('tri');
+        const resetButton = document.getElementById('reset');
+        const compteur = document.getElementById('compteur');
+        const aucunResultat = document.getElementById('aucunResultat');
+        const liste = document.getElementById('liste');
+        const cartes = Array.from(liste.children); // tous les avis et alertes
+
+        let filtreActif = 'all'; // 'all', 'avis' ou 'alerte'
+
+        // Transforme "13/11/2026" en "2026-11-13" pour pouvoir comparer deux dates
+        function dateTriable(carte) {
+            const morceaux = carte.dataset.date.split('/');
+            return morceaux[2] + '-' + morceaux[1] + '-' + morceaux[0];
+        }
+
+        // Trie les cartes selon le choix du menu, puis les remet dans la page dans le bon ordre
+        function trierCartes() {
+            cartes.sort((a, b) => {
+                if (triSelect.value === 'recent') {
+                    return dateTriable(b).localeCompare(dateTriable(a));
+                }
+                return dateTriable(a).localeCompare(dateTriable(b));
+            });
+            cartes.forEach((carte) => liste.appendChild(carte));
+        }
+
+        // Affiche seulement les cartes qui correspondent à la recherche ET au filtre
+        function appliquerFiltres() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let nbVisibles = 0;
+
+            cartes.forEach((carte) => {
+                const titre = carte.querySelector('h2').textContent.toLowerCase();
+                const bonType = filtreActif === 'all' || carte.classList.contains(filtreActif);
+                const bonTexte = titre.includes(searchTerm);
+
+                if (bonType && bonTexte) {
+                    carte.style.display = '';
+                    nbVisibles++;
+                } else {
+                    carte.style.display = 'none';
+                }
+            });
+
+            compteur.textContent = nbVisibles + ' résultat(s)';
+            aucunResultat.hidden = nbVisibles > 0;
+        }
+
+        // Met en couleur le bouton du filtre choisi
+        function majBoutonsFiltre() {
+            filterButtons.forEach((button) => {
+                button.classList.toggle('actif', button.dataset.filter === filtreActif);
+            });
+        }
 
         filterButtons.forEach((button) => {
             button.addEventListener('click', function () {
-                const filter = button.getAttribute('data-filter');
-                h2Elements.forEach((h2) => {
-                    const h2Container = h2.parentElement;
-                    if (filter === 'all' || h2Container.classList.contains(filter)) {
-                        h2Container.style.display = '';
-                    } else {
-                        h2Container.style.display = 'none';
-                    }
-                });
+                filtreActif = button.dataset.filter;
+                majBoutonsFiltre();
+                appliquerFiltres();
             });
         });
 
-        searchInput.addEventListener('input', function () {
-            const searchTerm = searchInput.value.toLowerCase();
-            h2Elements.forEach((h2) => {
-                const h2Container = h2.parentElement;
-                const title = h2.textContent.toLowerCase();
-                if (title.includes(searchTerm)) {
-                    h2Container.style.display = '';
-                } else {
-                    h2Container.style.display = 'none';
-                }
-            });
+        searchInput.addEventListener('input', appliquerFiltres);
+
+        triSelect.addEventListener('change', trierCartes);
+
+        resetButton.addEventListener('click', function () {
+            searchInput.value = '';
+            filtreActif = 'all';
+            triSelect.value = 'recent';
+            majBoutonsFiltre();
+            trierCartes();
+            appliquerFiltres();
         });
+
+        // Au chargement de la page
+        trierCartes();
+        appliquerFiltres();
     </script>
 </body>
 
