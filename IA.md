@@ -27,7 +27,16 @@ Demande : ajouter du style pour les alertes.
 ## 13/11 · Claude · filtres, tri, compteur et référence CERT-FR
 
 Demande : finaliser le filtre Tous/Avis/Alertes, ajouter un compteur de résultats, un tri par date (récent/ancien), un message « Aucun résultat trouvé », un bouton de réinitialisation et afficher la référence CERT-FR sur chaque élément
-Gardé   : à compléter après ta relecture (proposé : filtre combiné avec la recherche, compteur, tri par date, message « Aucun résultat trouvé », bouton Réinitialiser, référence CERT-FR sur chaque carte)
+Gardé   : Tout a été gardé
 Corrigé : aucun
 Rejeté  : aucun
+Commit  : 6a84073
+
+
+## 14/11 · Claude · rédaction du README
+
+Demande : rédiger un README pour le projet
+Gardé   : uniquement le titre, une phrase de description et la liste des fonctionnalités
+Corrigé : rien
+Rejeté  : rien
 Commit  : à compléter
