@@ -1,11 +1,15 @@
 from flask import *
 import requests
 import datetime as dt
+import feedparser
 
 app = Flask(__name__)
 
 url_avis = "https://cert.cyber.gouv.fr/avis/json/"
 url_alertes = "https://cert.cyber.gouv.fr/alerte/json/"
+rss_url = "https://www.bleepingcomputer.com/feed/"
+
+feed = feedparser.parse(rss_url)
 
 api_avis = requests.get(url_avis)
 api_alertes = requests.get(url_alertes)
@@ -25,4 +29,4 @@ for alert in cert_alertes:
 
 @app.route("/")
 def render_main_page():
-    return render_template("index.html", avis=cert_avis, alertes=cert_alertes)
+    return render_template("index.html", avis=cert_avis, alertes=cert_alertes, feed=feed.entries[:50])

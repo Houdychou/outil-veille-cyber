@@ -45,6 +45,15 @@
         </div>
         {% endfor %}
     </div>
+    <div class="article">
+        {% for entry in feed %}
+        <div class="article" data-date="{{ entry.published }}">
+            <h2>{{ entry.title }}</h2>
+            <a href="{{ entry.link }}">Accéder à l'article</a><br>
+            <p>Date de publication : {{ entry.published }}</p>
+        </div>
+        {% endfor %}
+    </div>
     <div id="aucunResultat" hidden>Aucun résultat trouvé</div>
 
     <script>
