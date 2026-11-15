@@ -10,12 +10,12 @@
 
 <body>
     <h1>Outil Veille Cyber</h1>
-    <p>Test!</p>
     <input type="text" id="searchInput" placeholder="Rechercher..." />
     <div class="filters">
         <button data-filter="all" class="actif">Tous</button>
         <button data-filter="avis">Avis</button>
         <button data-filter="alerte">Alertes</button>
+        <button data-filter="article">Actus</button>
     </div>
     <div class="outils">
         <label for="tri">Trier :</label>
@@ -29,7 +29,7 @@
 
     <div id="liste">
         {% for avis in avis %}
-        <div class="avis" data-date="{{ avis.last_revision_date }}">
+        <div class="avis" data-date="{{ avis.date_tri }}">
             <h2>{{ avis.title }}</h2>
             <a href="https://cert.cyber.gouv.fr/avis/{{ avis.reference }}">Accéder à l'avis</a><br>
             <p class="reference">{{ avis.reference }}</p>
@@ -37,7 +37,7 @@
         </div>
         {% endfor %}
         {% for alert in alertes %}
-        <div class="alerte" data-date="{{ alert.last_revision_date }}">
+        <div class="alerte" data-date="{{ alert.date_tri }}">
             <h2>{{ alert.title }}</h2>
             <a href="https://cert.cyber.gouv.fr/alerte/{{ alert.reference }}">Accéder à l'alerte</a><br>
             <p class="reference">{{ alert.reference }}</p>
@@ -45,17 +45,17 @@
         </div>
         {% endfor %}
     </div>
-    <div class="article">
-        {% for entry in feed %}
-        <div class="article" data-date="{{ entry.published }}">
-            <h2>{{ entry.title }}</h2>
-            <a href="{{ entry.link }}">Accéder à l'article</a><br>
-            <p>Date de publication : {{ entry.published }}</p>
-        </div>
-        {% endfor %}
-    </div>
     <div id="aucunResultat" hidden>Aucun résultat trouvé</div>
 
+    <section id="actualites">
+        {% for entry in feed %}
+        <div class="article" data-date="{{ entry.date_tri }}">
+            <h2>{{ entry.title }}</h2>
+            <a href="{{ entry.link }}" target="_blank" rel="noopener">Accéder à l'article</a><br>
+            <p>Date de publication : {{ entry.date_fr }}</p>
+        </div>
+        {% endfor %}
+    </section>
     <script>
         const searchInput = document.getElementById('searchInput');
         const filterButtons = document.querySelectorAll('.filters button');
@@ -64,25 +64,27 @@
         const compteur = document.getElementById('compteur');
         const aucunResultat = document.getElementById('aucunResultat');
         const liste = document.getElementById('liste');
-        const cartes = Array.from(liste.children); // tous les avis et alertes
+        const actualites = document.getElementById('actualites');
+        const cartesCert = Array.from(liste.children); // tous les avis et alertes
+        const cartesActus = Array.from(actualites.querySelectorAll('.article')); // tous les articles
+        const cartes = cartesCert.concat(cartesActus); // tous les éléments à filtrer
 
-        let filtreActif = 'all'; // 'all', 'avis' ou 'alerte'
+        let filtreActif = 'all'; // 'all', 'avis', 'alerte' ou 'article'
 
-        // Transforme "13/11/2026" en "2026-11-13" pour pouvoir comparer deux dates
-        function dateTriable(carte) {
-            const morceaux = carte.dataset.date.split('/');
-            return morceaux[2] + '-' + morceaux[1] + '-' + morceaux[0];
-        }
-
-        // Trie les cartes selon le choix du menu, puis les remet dans la page dans le bon ordre
-        function trierCartes() {
-            cartes.sort((a, b) => {
+        // Trie un groupe de cartes selon le choix du menu, puis les remet dans leur bloc
+        function trierGroupe(groupe, conteneur) {
+            groupe.sort((a, b) => {
                 if (triSelect.value === 'recent') {
-                    return dateTriable(b).localeCompare(dateTriable(a));
+                    return b.dataset.date.localeCompare(a.dataset.date);
                 }
-                return dateTriable(a).localeCompare(dateTriable(b));
+                return a.dataset.date.localeCompare(b.dataset.date);
             });
-            cartes.forEach((carte) => liste.appendChild(carte));
+            groupe.forEach((carte) => conteneur.appendChild(carte));
+        }
+        
+        function trierCartes() {
+            trierGroupe(cartesCert, liste);
+            trierGroupe(cartesActus, actualites);
         }
 
         // Affiche seulement les cartes qui correspondent à la recherche ET au filtre

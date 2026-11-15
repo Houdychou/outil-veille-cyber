@@ -1,10 +1,5 @@
-/* =========================================================
-   Outil Veille Cyber — style "bulletin de sécurité"
-   ========================================================= */
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap");
 
-/* Couleurs du thème clair */
 :root {
     --fond: #f4f3ef;
     --fond-carte: #ffffff;
@@ -15,6 +10,8 @@
     --avis-doux: #e8edfd;
     --alerte: #d93a2b;
     --alerte-doux: #fcebe9;
+    --article: #0d8a62;
+    --article-doux: #e3f4ec;
     --ombre: 0 1px 2px rgba(22, 24, 29, 0.04), 0 4px 16px rgba(22, 24, 29, 0.06);
     --ombre-survol: 0 2px 4px rgba(22, 24, 29, 0.06), 0 12px 32px rgba(22, 24, 29, 0.10);
     --rayon: 14px;
@@ -33,6 +30,8 @@
         --avis-doux: #1c2440;
         --alerte: #ff6b5c;
         --alerte-doux: #3a1d1b;
+        --article: #4fd1a1;
+        --article-doux: #15302a;
         --ombre: 0 1px 2px rgba(0, 0, 0, 0.3);
         --ombre-survol: 0 12px 32px rgba(0, 0, 0, 0.45);
     }
@@ -47,7 +46,7 @@ html {
 }
 
 /* La page est une grille : l'en-tête prend toute la largeur,
-   les avis et alertes se rangent sur 2 colonnes */
+   les cartes se rangent sur 2 colonnes */
 body {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -68,12 +67,14 @@ body > p,
 .filters,
 .outils,
 #liste,
+#actualites,
 #aucunResultat {
     grid-column: 1 / -1;
 }
 
-/* La liste des cartes reprend la grille sur 2 colonnes */
-#liste {
+/* Les deux listes de cartes reprennent la grille sur 2 colonnes */
+#liste,
+#actualites {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
@@ -89,24 +90,10 @@ h1 {
     line-height: 1.1;
 }
 
-/* Petite étiquette "VEILLE · CERT-FR" au-dessus du titre */
-h1::before {
-    content: "● VEILLE · CERT-FR";
-    display: block;
-    margin-bottom: 12px;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    color: var(--alerte);
-}
-
 body > p {
     margin: -8px 0 16px;
     color: var(--encre-discrete);
 }
-
-/* ---------- Recherche ---------- */
 
 #searchInput {
     width: 100%;
@@ -115,7 +102,6 @@ body > p {
     font-size: 1rem;
     color: var(--encre);
     background-color: var(--fond-carte);
-    /* Icône loupe dessinée en SVG */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238d929c' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: 18px center;
@@ -135,7 +121,6 @@ body > p {
     box-shadow: 0 0 0 4px rgba(127, 127, 127, 0.15);
 }
 
-/* ---------- Filtres ---------- */
 
 .filters {
     display: flex;
@@ -161,7 +146,6 @@ body > p {
     border-color: var(--encre);
 }
 
-/* Bouton du filtre actif (classe ajoutée par le JavaScript) */
 .filters button.actif {
     color: var(--fond);
     background-color: var(--encre);
@@ -180,7 +164,11 @@ body > p {
     color: #fff;
 }
 
-/* ---------- Tri, réinitialisation, compteur ---------- */
+.filters button.actif[data-filter="article"] {
+    background-color: var(--article);
+    border-color: var(--article);
+    color: var(--fond-carte);
+}
 
 .outils {
     display: flex;
@@ -221,7 +209,7 @@ body > p {
     border-radius: var(--rayon);
 }
 
-/* ---------- Cartes avis / alertes ---------- */
+/* ---------- Cartes avis / alertes / articles ---------- */
 
 .avis {
     --couleur: var(--avis);
@@ -235,8 +223,15 @@ body > p {
     --etiquette: "⚠ ALERTE";
 }
 
+.article {
+    --couleur: var(--article);
+    --couleur-douce: var(--article-doux);
+    --etiquette: "ACTU";
+}
+
 .avis,
-.alerte {
+.alerte,
+.article {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -249,9 +244,9 @@ body > p {
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
-/* Bande de couleur en haut de la carte */
 .avis::before,
-.alerte::before {
+.alerte::before,
+.article::before {
     content: "";
     position: absolute;
     inset: 0 0 auto 0;
@@ -260,7 +255,8 @@ body > p {
 }
 
 .avis:hover,
-.alerte:hover {
+.alerte:hover,
+.article:hover {
     transform: translateY(-3px);
     box-shadow: var(--ombre-survol);
     border-color: var(--couleur);
@@ -271,9 +267,10 @@ body > p {
     background-image: linear-gradient(160deg, var(--couleur-douce), var(--fond-carte) 60%);
 }
 
-/* Badge "AVIS" / "ALERTE" au-dessus du titre */
+/* Badge "AVIS" / "ALERTE" / "ACTU" au-dessus du titre */
 .avis h2::before,
-.alerte h2::before {
+.alerte h2::before,
+.article h2::before {
     content: var(--etiquette);
     display: table;
     margin-bottom: 12px;
@@ -288,7 +285,8 @@ body > p {
 }
 
 .avis h2,
-.alerte h2 {
+.alerte h2,
+.article h2 {
     order: 1;
     margin: 0 0 16px;
     font-size: 1.05rem;
@@ -297,9 +295,9 @@ body > p {
     letter-spacing: -0.01em;
 }
 
-/* Date en police "terminal" */
 .avis p,
-.alerte p {
+.alerte p,
+.article p {
     order: 2;
     margin: 0 0 20px;
     font-family: var(--mono);
@@ -309,7 +307,8 @@ body > p {
 
 /* Lien placé en bas de la carte, avec une flèche */
 .avis a,
-.alerte a {
+.alerte a,
+.article a {
     order: 3;
     margin-top: auto;
     padding-top: 16px;
@@ -327,32 +326,47 @@ body > p {
     transition: transform 0.2s;
 }
 
+/* Flèche "lien externe" pour les articles (ils s'ouvrent dans un nouvel onglet) */
+.article a::after {
+    content: " ↗";
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
 .avis a:hover::after,
 .alerte a:hover::after {
     transform: translateX(4px);
 }
 
+.article a:hover::after {
+    transform: translate(3px, -3px);
+}
+
 /* Toute la carte devient cliquable grâce au lien */
 .avis a::before,
-.alerte a::before {
+.alerte a::before,
+.article a::before {
     content: "";
     position: absolute;
     inset: 0;
 }
 
 .avis a:focus-visible,
-.alerte a:focus-visible {
+.alerte a:focus-visible,
+.article a:focus-visible {
     outline: none;
 }
 
 .avis:focus-within,
-.alerte:focus-within {
+.alerte:focus-within,
+.article:focus-within {
     outline: 2px solid var(--couleur);
     outline-offset: 2px;
 }
 
 .avis br,
-.alerte br {
+.alerte br,
+.article br {
     display: none;
 }
 
@@ -372,12 +386,14 @@ body > p {
         padding: 32px 16px 48px;
     }
 
-    #liste {
+    #liste,
+    #actualites {
         grid-template-columns: 1fr;
     }
 
     .avis,
-    .alerte {
+    .alerte,
+    .article {
         padding: 20px;
     }
 }

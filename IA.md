@@ -39,4 +39,13 @@ Demande : rédiger un README pour le projet
 Gardé   : uniquement le titre, une phrase de description et la liste des fonctionnalités
 Corrigé : rien
 Rejeté  : rien
+Commit  : 7e5a3d2
+
+
+## 15/11 · Claude · style de la source BleepingComputer
+
+Demande : ajouter du style pour la deuxième source de veille (articles BleepingComputer), puis un bouton « Actus » dans les filtres (recherche, tri et compteur appliqués aussi aux articles), supprimer les fonctions JS inutiles pour le tri des dates, puis retirer les titres de section
+Gardé   : style des cartes articles (couleur verte, bande à gauche, lien ↗ dans un nouvel onglet), bouton « Actus », tri et recherche sur les articles, dates au format jj/mm/aaaa (date_fr) et aaaa-mm-jj pour le tri (date_tri) dans app.py
+Corrigé : titre « Actualités » raccourci à la main ; suppression de dateTriable (la date triable vient maintenant de Flask) et de nbAffichees
+Rejeté  : titres de section (« Bulletins officiels · CERT-FR » / « Actualités ») et le code qui les masquait selon le filtre
 Commit  : à compléter
