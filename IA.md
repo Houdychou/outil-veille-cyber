@@ -48,4 +48,5 @@ Demande : ajouter du style pour la deuxième source de veille (articles Bleeping
 Gardé   : style des cartes articles (couleur verte, bande à gauche, lien ↗ dans un nouvel onglet), bouton « Actus », tri et recherche sur les articles, dates au format jj/mm/aaaa (date_fr) et aaaa-mm-jj pour le tri (date_tri) dans app.py
 Corrigé : titre « Actualités » raccourci à la main ; suppression de dateTriable (la date triable vient maintenant de Flask) et de nbAffichees
 Rejeté  : titres de section (« Bulletins officiels · CERT-FR » / « Actualités ») et le code qui les masquait selon le filtre
-Commit  : à compléter
+Commit  : f1076b2
+
