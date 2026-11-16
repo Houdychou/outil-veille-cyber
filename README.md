@@ -16,3 +16,7 @@ Ce projet a été réalisé pour me permettre de m'informer sur les dernières a
 - Tri par date (plus récent ou plus ancien)
 - Compteur de résultats et message « Aucun résultat trouvé »
 - Bouton de réinitialisation
+
+## Déploiement
+
+L'application est disponible via ce lien: https://outil-veille-cyber.onrender.com/
